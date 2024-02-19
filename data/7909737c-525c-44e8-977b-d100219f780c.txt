@@ -1,0 +1,1 @@
+{"nom":"produit 6","description":"Description du produit 6","famille":"Legume","image":"image6.jpg","prix":66.3}

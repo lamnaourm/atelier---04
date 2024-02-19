@@ -27,13 +27,19 @@ app.get('/produit/all', (req, res) => {
     var produits = []
     files.forEach(name => {
         const data = fs.readFileSync(`./data/${name}`)
-        produits.push(JSON.parse(data))
+        produits.push({id:name.split('.')[0],...JSON.parse(data)})
     })  
     res.json(produits)
 })
 
 app.get('/produit/id/:id', (req, res) => {
     
+    const id = req.params.id;
+    if(!fs.existsSync(`./data/${id}.txt`))
+        return res.status(404).send(`${id} produit incorrect`)
+    
+    const data = fs.readFileSync(`./data/${id}.txt`)
+    res.json(JSON.parse(data))
 })
 
 app.get('/produit/famille/:famille', (req, res) => {
@@ -41,11 +47,16 @@ app.get('/produit/famille/:famille', (req, res) => {
 })
 
 app.put('/produit/:id', (req, res) => {
-    
+    if(!fs.existsSync(`./data/${req.params.id}`))
+        return res.status(404).send('ID produit incorrect')
 })
 
 app.delete('/produit/:id', (req, res) => {
-    
+    if(!fs.existsSync(`./data/${req.params.id}`))
+        return res.status(404).send('ID produit incorrect')
+
+    fs.unlinkSync(`./data/${req.params.id}`)
+    res.end()
 })
 
 app. listen(3000, (err) => {
